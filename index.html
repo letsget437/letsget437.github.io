@@ -1,0 +1,1574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>VerdaPay | Digital Wallet</title>
+
+<style>
+:root {
+    --green: #1a08b9;
+    --green-dark: #1a08b9;
+    --green-light: #e7fff5;
+    --background: #f5f7f8;
+    --text: #171f2b;
+    --muted: #78847f;
+    --white: #ffffff;
+    --border: #e5ece8;
+    --radius: 20px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
+                 Roboto, Arial, sans-serif;
+    background: var(--background);
+    color: var(--text);
+    min-height: 100vh;
+}
+
+button, input, select {
+    font: inherit;
+}
+
+button {
+    cursor: pointer;
+    border: none;
+}
+
+button:disabled {
+    cursor: not-allowed;
+    opacity: 0.45;
+}
+
+.demo-banner {
+    background: #fff4d8;
+    color: #72500b;
+    padding: 10px 16px;
+    text-align: center;
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+.topbar {
+    max-width: 1100px;
+    margin: auto;
+    padding: 24px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 21px;
+    font-weight: 800;
+    letter-spacing: -0.8px;
+}
+
+.brand-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 14px;
+    display: grid;
+    place-items: center;
+    background: var(--green);
+    color: white;
+    font-size: 23px;
+}
+
+.header-actions {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.icon-button {
+    background: white;
+    width: 42px;
+    height: 42px;
+    border-radius: 14px;
+    font-size: 18px;
+    border: 1px solid var(--border);
+}
+
+main {
+    max-width: 1100px;
+    margin: auto;
+    padding: 0 20px 50px;
+}
+
+.page {
+    display: none;
+    animation: appear .25s ease;
+}
+
+.page.active {
+    display: block;
+}
+
+@keyframes appear {
+    from {
+        opacity: 0;
+        transform: translateY(6px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.page-heading {
+    margin: 16px 0 24px;
+}
+
+.page-heading h1 {
+    font-size: clamp(25px, 4vw, 34px);
+    letter-spacing: -1px;
+    margin-bottom: 8px;
+}
+
+.page-heading p {
+    color: var(--muted);
+    line-height: 1.7;
+}
+
+.card {
+    background: var(--white);
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    padding: 24px;
+    margin-bottom: 20px;
+}
+
+.balance-card {
+    background: linear-gradient(130deg, #2542e6, #3d04a8);
+    color: white;
+    border-radius: 24px;
+    padding: 28px;
+    position: relative;
+    overflow: hidden;
+}
+
+.balance-card::after {
+    content: "";
+    position: absolute;
+    width: 220px;
+    height: 220px;
+    border: 35px solid rgba(255,255,255,.08);
+    border-radius: 50%;
+    right: -60px;
+    top: -100px;
+}
+
+.balance-top {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.balance-label {
+    opacity: .9;
+    font-size: 14px;
+}
+
+.balance-value {
+    font-size: clamp(32px, 6vw, 46px);
+    letter-spacing: -1.5px;
+    margin: 22px 0 8px;
+    font-weight: 800;
+    overflow-wrap: anywhere;
+}
+
+.balance-subtitle {
+    font-size: 13px;
+    opacity: .85;
+}
+
+.balance-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 26px;
+    position: relative;
+    z-index: 1;
+}
+
+.white-button {
+    background: white;
+    color: var(--green-dark);
+    padding: 12px 18px;
+    border-radius: 12px;
+    font-weight: 700;
+}
+
+.glass-button {
+    background: rgba(255,255,255,.16);
+    border: 1px solid rgba(255,255,255,.35);
+    color: white;
+    padding: 12px 16px;
+    border-radius: 12px;
+    font-weight: 600;
+}
+
+.section-title {
+    font-size: 18px;
+    font-weight: 750;
+    margin-bottom: 18px;
+}
+
+.currency-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.currency-button {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 18px 10px;
+    text-align: left;
+    transition: .2s;
+}
+
+.currency-button:hover {
+    border-color: var(--green);
+    transform: translateY(-2px);
+}
+
+.currency-button.selected {
+    background: var(--green-light);
+    border-color: var(--green);
+}
+
+.currency-code {
+    font-size: 13px;
+    color: var(--muted);
+    display: block;
+    margin-bottom: 8px;
+}
+
+.currency-amount {
+    font-size: clamp(14px, 2.5vw, 21px);
+    font-weight: 800;
+    overflow-wrap: anywhere;
+}
+
+.currency-note {
+    color: var(--muted);
+    font-size: 12px;
+    margin-top: 14px;
+    line-height: 1.6;
+}
+
+.action-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+    margin: 22px 0;
+}
+
+.action-card {
+    padding: 23px;
+    text-align: left;
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    transition: .2s;
+}
+
+.action-card:hover {
+    border-color: var(--green);
+    transform: translateY(-2px);
+}
+
+.action-icon {
+    width: 48px;
+    height: 48px;
+    background: var(--blue-light);
+    color: var(--blue-dark);
+    border-radius: 15px;
+    display: grid;
+    place-items: center;
+    font-size: 23px;
+    margin-bottom: 18px;
+}
+
+.action-card h3 {
+    font-size: 17px;
+    margin-bottom: 7px;
+}
+
+.action-card p {
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+.transaction-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 15px 0;
+    border-bottom: 1px solid var(--border);
+}
+
+.transaction-row:last-child {
+    border-bottom: none;
+}
+
+.transaction-icon {
+    width: 42px;
+    height: 42px;
+    display: grid;
+    place-items: center;
+    background: #f0f4f2;
+    border-radius: 13px;
+}
+
+.transaction-info {
+    flex: 1;
+}
+
+.transaction-info h4 {
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+
+.transaction-info p {
+    font-size: 12px;
+    color: var(--muted);
+}
+
+.transaction-amount {
+    font-size: 14px;
+    font-weight: 750;
+}
+
+.notice {
+    padding: 14px 16px;
+    border-radius: 13px;
+    background: #f0f8ff;
+    color: #315a7c;
+    font-size: 13px;
+    line-height: 1.7;
+    margin: 16px 0;
+}
+
+.warning {
+    background: #fff8e8;
+    color: #76510d;
+}
+
+.success {
+    background: #e9fff5;
+    color: #1a08b9;
+}
+
+.form-card {
+    max-width: 720px;
+    margin: 0 auto 24px;
+}
+
+.form-group {
+    margin-bottom: 19px;
+}
+
+.form-group label {
+    display: block;
+    font-size: 14px;
+    font-weight: 650;
+    margin-bottom: 9px;
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 14px 15px;
+    border: 1px solid #dce5e0;
+    border-radius: 12px;
+    outline: none;
+    background: white;
+    color: var(--text);
+    min-width: 0;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    border-color: var(--green);
+    box-shadow: 0 0 0 3px rgba(8,185,129,.1);
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0 16px;
+}
+
+.primary-button {
+    width: 100%;
+    padding: 16px;
+    border-radius: 13px;
+    background: var(--green);
+    color: white;
+    font-weight: 750;
+    transition: .2s;
+}
+
+.primary-button:hover:not(:disabled) {
+    background: var(--green-dark);
+}
+
+.secondary-button {
+    padding: 13px 18px;
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    color: var(--text);
+    font-weight: 650;
+}
+
+.button-row {
+    display: flex;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+.button-row > * {
+    flex: 1;
+}
+
+.terms-copy {
+    line-height: 1.85;
+    font-size: 14px;
+    color: #53615b;
+}
+
+.terms-copy h3 {
+    color: var(--text);
+    margin: 23px 0 9px;
+    font-size: 16px;
+}
+
+.terms-copy p {
+    margin-bottom: 15px;
+}
+
+.checkbox-row {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    padding: 17px;
+    background: #f6faf8;
+    border: 1px solid var(--border);
+    border-radius: 13px;
+    margin: 20px 0;
+    line-height: 1.6;
+    font-size: 13px;
+}
+
+.checkbox-row input {
+    margin-top: 4px;
+    accent-color: var(--green);
+    width: 17px;
+    height: 17px;
+    flex-shrink: 0;
+}
+
+.wallet-card {
+    max-width: 600px;
+    margin: auto;
+    text-align: center;
+}
+
+.wallet-symbol {
+    margin: 5px auto 20px;
+    width: 68px;
+    height: 68px;
+    border-radius: 22px;
+    background: var(--green-light);
+    display: grid;
+    place-items: center;
+    font-size: 32px;
+}
+
+.qr-container {
+    display: flex;
+    justify-content: center;
+    margin: 24px 0;
+    padding: 20px;
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    min-height: 220px;
+    align-items: center;
+}
+
+.qr-container img {
+    max-width: 200px;
+    width: 100%;
+    height: auto;
+}
+
+.wallet-address {
+    background: #f5f8f6;
+    padding: 16px;
+    border-radius: 12px;
+    font-size: 12px;
+    line-height: 1.7;
+    overflow-wrap: anywhere;
+    margin: 14px 0;
+    text-align: left;
+}
+
+.wallet-address strong {
+    display: block;
+    margin-bottom: 7px;
+    font-size: 13px;
+}
+
+.center {
+    text-align: center;
+}
+
+.processing-icon {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    background: var(--green-light);
+    color: var(--green-dark);
+    display: grid;
+    place-items: center;
+    font-size: 40px;
+    margin: 15px auto 25px;
+}
+
+footer {
+    max-width: 1100px;
+    margin: auto;
+    padding: 0 20px 30px;
+    color: var(--muted);
+    font-size: 12px;
+    line-height: 1.8;
+    text-align: center;
+}
+
+.toast {
+    position: fixed;
+    bottom: 22px;
+    left: 50%;
+    transform: translate(-50%, 20px);
+    background: #1a08b9;
+    color: white;
+    padding: 13px 20px;
+    border-radius: 12px;
+    font-size: 13px;
+    opacity: 0;
+    pointer-events: none;
+    transition: .25s;
+    z-index: 20;
+    width: max-content;
+    max-width: calc(100% - 32px);
+}
+
+.toast.show {
+    opacity: 1;
+    transform: translate(-50%, 0);
+}
+
+.back-link {
+    background: transparent;
+    color: var(--green-dark);
+    font-weight: 700;
+    margin-bottom: 12px;
+    padding: 8px 0;
+}
+
+.small-muted {
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.7;
+}
+
+@media (max-width: 600px) {
+    .topbar {
+        padding: 17px 16px;
+    }
+
+    main {
+        padding: 0 15px 35px;
+    }
+
+    .balance-card {
+        padding: 22px 18px;
+    }
+
+    .card {
+        padding: 19px;
+    }
+
+    .currency-grid {
+        gap: 7px;
+    }
+
+    .currency-button {
+        padding: 14px 9px;
+    }
+
+    .action-grid {
+        gap: 10px;
+    }
+
+    .action-card {
+        padding: 17px 13px;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .button-row {
+        flex-direction: column;
+    }
+
+    .brand {
+        font-size: 18px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="demo-banner">
+     Balance, wallet, and transactions are important.
+    
+</div>
+
+<header class="topbar">
+    <div class="brand">
+        <div class="brand-icon">M</div>
+        <span>MELLISA ANNE</span>
+    </div>
+
+    <div class="header-actions">
+        <button class="icon-button" aria-label="Help"
+                onclick="showToast('support centre')">?</button>
+
+        <button class="icon-button" aria-label="Notifications"
+                onclick="showToast('You have no new notifications')">♧</button>
+    </div>
+</header>
+
+<main>
+
+<!-- ================= DASHBOARD ================= -->
+
+<section id="home" class="page active">
+
+    <div class="page-heading">
+        <h1>Welcome back 👋</h1>
+        <p>Manage your digital assets from one place.</p>
+    </div>
+
+    <div class="balance-card">
+
+        <div class="balance-top">
+            <span class="balance-label">◈ Available Balance ·</span>
+            <span class="balance-label">Account overview</span>
+        </div>
+
+        <div class="balance-value" id="mainBalance">
+            $30,000.00 AUD
+        </div>
+
+        <div class="balance-subtitle" id="balanceSubtitle">
+            Australian Dollar (AUD) ·
+        </div>
+
+        <div class="balance-actions">
+            <button class="white-button" onclick="goTo('terms')">
+                Verify Your Information
+            </button>
+
+            <button class="glass-button" onclick="goTo('terms')">
+                Withdraw ↗
+            </button>
+        </div>
+    </div>
+
+    <div class="card" style="margin-top:22px">
+
+        <h2 class="section-title">Currency converter</h2>
+
+        <div class="currency-grid">
+
+            <button class="currency-button selected"
+                    data-currency="AUD" onclick="changeCurrency('AUD')">
+                <span class="currency-code">🇦🇺 AUD</span>
+                <span class="currency-amount" id="amountAUD">
+                    A$30,000
+                </span>
+            </button>
+
+            <button class="currency-button"
+                    data-currency="USD" onclick="changeCurrency('USD')">
+                <span class="currency-code">🇺🇸 USD</span>
+                <span class="currency-amount" id="amountUSD">
+                    US$21,500
+                </span>
+            </button>
+
+            <button class="currency-button"
+                    data-currency="GBP" onclick="changeCurrency('GBP')">
+                <span class="currency-code">🇬🇧 GBP</span>
+                <span class="currency-amount" id="amountGBP">
+                    £14,700
+                </span>
+            </button>
+
+        </div>
+
+        <p class="currency-note">
+            Note that this is current rate is at the moment of seeing this.
+        </p>
+    </div>
+
+    <div class="action-grid">
+
+        <button class="action-card" onclick="goTo('terms')">
+            <div class="action-icon">✓</div>
+            <h3>Verify Your Information</h3>
+            <p>View the verification process and its requirements.</p>
+        </button>
+
+        <button class="action-card" onclick="goTo('terms')">
+            <div class="action-icon">↗</div>
+            <h3>Withdraw</h3>
+            <p>Explore the withdrawal verification flow.</p>
+        </button>
+
+    </div>
+
+    
+
+</section>
+
+
+<!-- ================= TERMS ================= -->
+
+<section id="terms" class="page">
+
+    <button class="back-link" onclick="goTo('home')">
+        ← Back to dashboard
+    </button>
+
+    <div class="page-heading">
+        <h1>International Transfer Guidelines</h1>
+        <p>
+            Review the terms and responsibilities associated with
+            cross-border digital-asset transfers.
+        </p>
+    </div>
+
+    <div class="card">
+
+        <div class="notice warning">
+            <strong>Important:</strong> These are very important informations need for the subjects clarity and awearness.
+            
+        </div>
+
+        <div class="terms-copy">
+
+            <h3>1. Purpose of these guidelines</h3>
+
+            <p>
+                International cryptocurrency transfers may involve
+                different legal, regulatory, tax, and financial
+                requirements depending on the countries involved.
+                Before making a transfer, users should understand the
+                responsibilities associated with sending, receiving,
+                holding, and exchanging digital assets. These guidelines
+                are intended to explain the importance of informed
+                participation and responsible use of digital financial
+                services.
+            </p>
+
+            <h3>2. Applicable laws and regulations</h3>
+
+            <p>
+                Cryptocurrency is not regulated identically in every
+                jurisdiction. Users should determine which requirements
+                apply to their residence, the destination of a transfer,
+                and the service provider involved. Depending on the
+                circumstances, relevant requirements may include
+                anti-money-laundering rules, counter-terrorism-financing
+                controls, sanctions restrictions, tax obligations, and
+                customer identification procedures. No single statement
+                on this page replaces the applicable law in a particular
+                country.
+            </p>
+
+            <h3>3. Identity verification and account security</h3>
+
+            <p>
+                Financial service providers may need to verify customer
+                identities and assess certain transactions to comply
+                with applicable obligations. A legitimate verification
+                process should explain what information is collected,
+                why it is required, how it will be protected, how long it
+                will be retained, and how users may exercise their
+                applicable privacy rights. Users should only submit
+                information through a service whose identity and
+                legitimacy they have independently verified.
+            </p>
+
+            <h3>4. Accurate information</h3>
+
+            <p>
+                Where a provider lawfully requires customer information,
+                users should provide accurate and current details.
+                Inaccurate information may prevent a provider from
+                completing a legitimate verification process. Users
+                should never be asked to misrepresent their identity,
+                fabricate documents, or provide passwords, recovery
+                phrases, or private cryptographic keys as part of
+                ordinary identity verification.
+            </p>
+
+            <h3>5. Digital-asset transfer risks</h3>
+
+            <p>
+                Cryptocurrency transfers may be irreversible.
+                Incorrect addresses, incompatible networks, price
+                fluctuations, network congestion, service outages, and
+                fraudulent requests can cause financial loss. Before
+                transferring any digital asset, users should independently
+                verify the destination address, blockchain network,
+                asset type, fees, and the identity of the intended
+                recipient. A displayed wallet balance alone does not
+                establish ownership of funds or prove that a deposit
+                has been received.
+            </p>
+
+            <h3>6. Fees, processing times, and restrictions</h3>
+
+            <p>
+                Processing times and fees can vary according to network
+                conditions, provider procedures, and applicable
+                requirements. Handling a case between the US and Australia comes with a Tax fee of 10% ($3,000 AUD) of the summed up amount which should be paid with 48 hours prior the transfer. A provider should communicate material
+                fees, restrictions, and delays clearly. Users should
+                not be told that an additional payment is required to
+                release a balance unless the charge is legitimate,
+                properly disclosed, and independently verifiable.
+            </p>
+
+            <h3>7. Privacy and data protection</h3>
+
+            <p>
+                Personal information should be collected only for
+                specified, legitimate purposes and handled according
+                to applicable data-protection requirements. Users
+                should review a provider's privacy notice before
+                submitting identifying information or supporting
+                documents. A production service must use appropriate
+                access controls, secure transmission, retention
+                policies, and procedures for responding to data
+                incidents.
+            </p>
+
+            <h3>8. User acknowledgement</h3>
+
+            <p>
+                By acknowledging these sample guidelines, you confirm
+                that you have read this explanatory material and
+                understand the general risks associated with
+                cross-border cryptocurrency transfers. You understand
+                that the text is informational only and does not
+                constitute legal advice, guarantee regulatory approval,
+                or establish that a transaction complies with every
+                applicable law. You should seek qualified advice when
+                necessary.
+            </p>
+
+        </div>
+
+        <label class="checkbox-row">
+            <input type="checkbox" id="agreeTerms"
+                   onchange="toggleTermsButton()">
+
+            <span>
+                I have read and understood these sample guidelines.
+                I understand that this is a demonstration website and
+                that these terms are not an official legal approval.
+            </span>
+        </label>
+
+        <button class="primary-button" id="continueTerms"
+                disabled onclick="goTo('verification')">
+            Agree and Continue
+        </button>
+
+    </div>
+
+</section>
+
+
+<!-- ================= VERIFICATION FORM ================= -->
+
+<section id="verification" class="page">
+
+    <button class="back-link" onclick="goTo('terms')">
+        ← Back to guidelines
+    </button>
+
+    <div class="page-heading">
+        <h1>Information Verification</h1>
+        <p>
+            Complete the form to preview the verification
+            experience.
+        </p>
+    </div>
+
+    <div class="card form-card">
+
+        <div class="notice warning">
+            Note: All these information would facilitate and fasten the process.
+        </div>
+
+        <form id="verificationForm">
+
+            <div class="form-grid">
+
+                <div class="form-group">
+                    <label for="firstName">First name</label>
+                    <input type="text" id="firstName"
+                           placeholder="Enter first name"
+                           autocomplete="off" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="phone">Phone number</label>
+                    <input type="tel" id="phone"
+                           placeholder="+61 400 000 000"
+                           autocomplete="off"
+                           pattern="[0-9+() .-]{7,20}" required>
+                </div>
+
+                 <div class="form-group">
+                    <label for="firstName">Bank Name</label>
+                    <input type="text" id="firstName"
+                           placeholder="Enter first name"
+                           autocomplete="off" required>
+                </div>
+
+                 <div class="form-group">
+                    <label for="phone">Account number</label>
+                    <input type="tel" id="phone"
+                           placeholder="000 000 000 000"
+                           autocomplete="off"
+                           pattern="[0-9+() .-]{7,20}" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email address</label>
+                    <input type="email" id="email"
+                           placeholder="example@email.com"
+                           autocomplete="off" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="dob">Date of birth</label>
+                    <input type="date" id="dob"
+                           required>
+                </div>
+
+                <div class="form-group">
+                    <label for="age">Age</label>
+                    <input type="number" id="age"
+                           min="18" max="120"
+                           placeholder="Enter age" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="country">Country of residence</label>
+                    <select id="country" required>
+                        <option value="">Select country</option>
+                        <option>Australia</option>
+                        <option>United Kingdom</option>
+                        <option>United States</option>
+                        <option>UAE</option>
+                        <option>Canada</option>
+                        <option>Other</option>
+                    </select>
+                </div>
+
+            </div>
+
+            <div class="form-group">
+                <label for="document">
+                    Upload supporting document
+                </label>
+
+                <input type="file" id="document"
+                       accept=".pdf,.jpg,.jpeg,.png">
+
+                <p class="small-muted" style="margin-top:8px">
+                    Provide Original Bank Statement, Utility Bill, or Government-issued ID. 
+                </p>
+            </div>
+
+            <div id="fileStatus" class="small-muted"
+                 style="margin-bottom:18px">
+                No file selected.
+            </div>
+
+            <button type="submit" class="primary-button">
+                Continue to Wallet
+            </button>
+
+        </form>
+
+    </div>
+
+</section>
+
+
+<!-- ================= WALLET ================= -->
+
+<section id="wallet" class="page">
+
+    <button class="back-link" onclick="goTo('home')">
+        ← Back to dashboard
+    </button>
+
+    <div class="page-heading center">
+        <h1>Provided Wallet</h1>
+        <p>This wallet is for the 10% Tax Fee.</p>
+    </div>
+
+    <div class="card wallet-card">
+
+        <div class="wallet-symbol">◈</div>
+
+        <h2 style="margin-bottom:10px">
+            Wallet address
+        </h2>
+
+        <p class="small-muted">
+           
+        </p>
+
+        <div class="qr-container">
+            <div id="qrCode">
+                <p class="small-muted">Generating QR code…</p>
+            </div>
+        </div>
+
+        <div class="wallet-address">
+            <strong>Wallet address</strong>
+
+            <span id="walletAddress">
+                ADDRESS_FOR_TRANSFER
+            </span>
+        </div>
+
+        <button class="secondary-button" style="width:100%"
+                onclick="copyWalletAddress()">
+            Copy wallet address
+        </button>
+
+        <div class="notice warning" style="text-align:left">
+            CLICK ON "COPY WALLET ADDRESS" TO COPY THE WALLET ADDRESS 
+        </div>
+
+        <button class="primary-button"
+                onclick="goTo('processing')">
+            I've added money to my wallet
+        </button>
+
+    </div>
+
+</section>
+
+
+<!-- ================= PROCESSING ================= -->
+
+<section id="processing" class="page">
+
+    <div class="card wallet-card" style="margin-top:30px">
+
+        <div class="processing-icon">◷</div>
+
+        <h1 style="font-size:28px;margin-bottom:12px">
+            This might take a while
+        </h1>
+
+        <p class="terms-copy">
+            This would be comfirmed once the transaction is verified on the blockchain. You will be notified when the process is complete.
+        </p>
+
+        <div class="notice" style="text-align:left">
+            <strong>Status:</strong> 
+            A production platform should display a pending status only
+            when backed by actual transaction data.
+        </div>
+
+        <button class="primary-button"
+                onclick="goTo('home')">
+            Go Back Home
+        </button>
+
+    </div>
+
+</section>
+
+</main>
+
+<footer>
+  · INTERPOL Cryptocurreny Case · <br>
+    
+</footer>
+
+<div class="toast" id="toast"></div>
+
+
+<!-- QR code display library -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+<script>
+
+// ========================================
+// CONFIGURATION
+// ========================================
+
+// Simulated balance, not real funds.
+const BALANCE_AUD = 30000;
+
+// Illustrative rates for the demo only.
+// Replace with a trusted live-rate API in a real application.
+const RATES = {
+    AUD: 1,
+    USD: 0.65,
+    GBP: 0.49
+};
+
+const CURRENCY_FORMATS = {
+    AUD: {
+        locale: "en-AU",
+        currency: "AUD"
+    },
+    USD: {
+        locale: "en-US",
+        currency: "USD"
+    },
+    GBP: {
+        locale: "en-GB",
+        currency: "GBP"
+    }
+};
+
+// This is deliberately not a real wallet address.
+const WALLET_ADDRESS = "ADDRESS_FOR_TRANSFERS";
+
+let selectedCurrency = "AUD";
+
+
+// ========================================
+// PAGE NAVIGATION
+// ========================================
+
+function goTo(pageId) {
+
+    const pages = document.querySelectorAll(".page");
+
+    pages.forEach(page => {
+        page.classList.remove("active");
+    });
+
+    const targetPage = document.getElementById(pageId);
+
+    if (!targetPage) {
+        showToast("Page not found.");
+        return;
+    }
+
+    targetPage.classList.add("active");
+
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+
+    if (pageId === "wallet") {
+        generateQRCode();
+    }
+}
+
+
+// ========================================
+// CURRENCY CONVERTER
+// ========================================
+
+function formatMoney(amount, currency) {
+
+    const config = CURRENCY_FORMATS[currency];
+
+    return new Intl.NumberFormat(config.locale, {
+        style: "currency",
+        currency: config.currency,
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    }).format(amount);
+}
+
+
+function changeCurrency(currency) {
+
+    if (!Object.prototype.hasOwnProperty.call(
+        RATES, currency
+    )) {
+        return;
+    }
+
+    selectedCurrency = currency;
+
+    const convertedBalance =
+        BALANCE_AUD * RATES[currency];
+
+    document.getElementById("mainBalance").textContent =
+        formatMoney(convertedBalance, currency);
+
+    const currencyNames = {
+        AUD: "Australian Dollar",
+        USD: "US Dollar",
+        GBP: "British Pound"
+    };
+
+    document.getElementById("balanceSubtitle").textContent =
+        currencyNames[currency] +
+        " (" + currency + ") · Simulated balance";
+
+    document.querySelectorAll(".currency-button").forEach(button => {
+
+        button.classList.toggle(
+            "selected",
+            button.dataset.currency === currency
+        );
+
+    });
+
+    showToast("Showing illustrative " + currency + " conversion.");
+}
+
+
+function updateCurrencyCards() {
+
+    document.getElementById("amountAUD").textContent =
+        formatMoney(BALANCE_AUD, "AUD");
+
+    document.getElementById("amountUSD").textContent =
+        formatMoney(
+            BALANCE_AUD * RATES.USD,
+            "USD"
+        );
+
+    document.getElementById("amountGBP").textContent =
+        formatMoney(
+            BALANCE_AUD * RATES.GBP,
+            "GBP"
+        );
+}
+
+updateCurrencyCards();
+
+
+// ========================================
+// TERMS AND CONDITIONS
+// ========================================
+
+function toggleTermsButton() {
+
+    const agreed =
+        document.getElementById("agreeTerms").checked;
+
+    document.getElementById("continueTerms").disabled =
+        !agreed;
+}
+
+
+// ========================================
+// AGE AND DATE OF BIRTH
+// ========================================
+
+const dobInput = document.getElementById("dob");
+const ageInput = document.getElementById("age");
+
+const today = new Date();
+
+dobInput.max = [
+    today.getFullYear(),
+    String(today.getMonth() + 1).padStart(2, "0"),
+    String(today.getDate()).padStart(2, "0")
+].join("-");
+
+
+function calculateAge(dateString) {
+
+    if (!dateString) return null;
+
+    const birthDate = new Date(dateString + "T00:00:00");
+
+    if (Number.isNaN(birthDate.getTime())) return null;
+
+    let age = today.getFullYear() - birthDate.getFullYear();
+
+    const monthDifference =
+        today.getMonth() - birthDate.getMonth();
+
+    if (
+        monthDifference < 0 ||
+        (
+            monthDifference === 0 &&
+            today.getDate() < birthDate.getDate()
+        )
+    ) {
+        age--;
+    }
+
+    return age;
+}
+
+
+dobInput.addEventListener("change", function() {
+
+    const age = calculateAge(this.value);
+
+    if (age !== null && age >= 0) {
+        ageInput.value = age;
+    } else {
+        ageInput.value = "";
+    }
+});
+
+
+ageInput.addEventListener("input", function() {
+
+    if (!dobInput.value) return;
+
+    const calculatedAge = calculateAge(dobInput.value);
+
+    if (Number(this.value) !== calculatedAge) {
+        this.setCustomValidity(
+            "Age must match the date of birth."
+        );
+    } else {
+        this.setCustomValidity("");
+    }
+});
+
+
+// ========================================
+// FILE INPUT
+// ========================================
+
+document.getElementById("document").addEventListener(
+    "change",
+    function() {
+
+        const fileStatus =
+            document.getElementById("fileStatus");
+
+        const file = this.files[0];
+
+        if (!file) {
+            fileStatus.textContent = "No file selected.";
+            return;
+        }
+
+        const allowedTypes = [
+            "application/pdf",
+            "image/jpeg",
+            "image/png"
+        ];
+
+        if (!allowedTypes.includes(file.type)) {
+            this.value = "";
+            fileStatus.textContent =
+                "Please select a PDF, JPEG, or PNG file.";
+
+            showToast("Unsupported file type.");
+            return;
+        }
+
+        const maxSize = 5 * 1024 * 1024;
+
+        if (file.size > maxSize) {
+            this.value = "";
+            fileStatus.textContent =
+                "File must be 5 MB or smaller.";
+
+            showToast("File is too large.");
+            return;
+        }
+
+        fileStatus.textContent =
+            "Demo file selected: " +
+            file.name +
+            " · " +
+            (file.size / 1024).toFixed(1) +
+            " KB. Not uploaded.";
+    }
+);
+
+
+// ========================================
+// VERIFICATION FORM
+// ========================================
+
+document.getElementById("verificationForm").addEventListener(
+    "submit",
+    function(event) {
+
+        event.preventDefault();
+
+        if (!this.reportValidity()) {
+            return;
+        }
+
+        const dob = dobInput.value;
+        const calculatedAge = calculateAge(dob);
+        const enteredAge = Number(ageInput.value);
+
+        if (
+            calculatedAge === null ||
+            calculatedAge < 18 ||
+            enteredAge !== calculatedAge
+        ) {
+            showToast(
+                "Enter a valid date of birth and matching age."
+            );
+
+            return;
+        }
+
+        // No personal details are sent or stored.
+        // This is a demonstration navigation only.
+
+        goTo("wallet");
+    }
+);
+
+
+// ========================================
+// QR CODE
+// ========================================
+
+function generateQRCode() {
+
+    const qrContainer = document.getElementById("qrCode");
+
+    document.getElementById("walletAddress").textContent =
+        DEMO_WALLET_ADDRESS;
+
+    qrContainer.innerHTML = "";
+
+    if (typeof QRCode === "undefined") {
+
+        qrContainer.innerHTML =
+            '<p class="small-muted">' +
+            'QR library unavailable. Check your internet connection.' +
+            '</p>';
+
+        return;
+    }
+
+    new QRCode(qrContainer, {
+        text: WALLET_ADDRESS,
+        width: 190,
+        height: 190,
+        colorDark: "#172b25",
+        colorLight: "#ffffff",
+        correctLevel: QRCode.CorrectLevel.M
+    });
+}
+
+
+// ========================================
+// COPY WALLET ADDRESS
+// ========================================
+
+async function copyWalletAddress() {
+
+    try {
+
+        await navigator.clipboard.writeText(
+            WALLET_ADDRESS
+        );
+
+        showToast("Demo address copied.");
+
+    } catch (error) {
+
+        // Fallback for browsers without Clipboard API access.
+        const textArea = document.createElement("textarea");
+
+        textArea.value = WALLET_ADDRESS;
+
+        textArea.style.position = "fixed";
+        textArea.style.opacity = "0";
+
+        document.body.appendChild(textArea);
+
+        textArea.select();
+
+        try {
+            document.execCommand("copy");
+            showToast("Demo address copied.");
+        } catch (copyError) {
+            showToast(
+                "Copy unavailable. Please select the address manually."
+            );
+        }
+
+        textArea.remove();
+    }
+}
+
+
+// ========================================
+// TOAST NOTIFICATIONS
+// ========================================
+
+let toastTimeout;
+
+function showToast(message) {
+
+    const toast = document.getElementById("toast");
+
+    toast.textContent = message;
+    toast.classList.add("show");
+
+    clearTimeout(toastTimeout);
+
+    toastTimeout = setTimeout(() => {
+        toast.classList.remove("show");
+    }, 2800);
+}
+
+</script>
+
+</body>
+</html>
